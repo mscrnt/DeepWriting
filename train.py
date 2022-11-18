@@ -19,7 +19,7 @@ print(text[:250])
 vocab = sorted(set(text))
 print(f'{len(vocab)} unique characters')
 
-chars = tf.strings.unicode_split(path_to_file, input_encoding='UTF-8')
+chars = tf.strings.unicode_split(text, input_encoding='UTF-8')
 print(chars[:10])
 
 ids_from_chars = tf.keras.layers.StringLookup(
@@ -38,7 +38,7 @@ def text_from_ids(ids):
   return tf.strings.reduce_join(chars_from_ids(ids), axis=-1)
 
 all_ids = ids_from_chars(tf.strings.unicode_split(text, 'UTF-8'))
-print(all_ids)
+print(all_ids[:10])
 
 ids_dataset = tf.data.Dataset.from_tensor_slices(all_ids)
 
@@ -60,10 +60,12 @@ def split_input_target(sequence):
     target_text = sequence[1:]
     return input_text, target_text
 
+#Showing how it splits the sequence
 print(split_input_target(list("Tensorflow")))   
 
 dataset = sequences.map(split_input_target)
 
+#Showing input and target examples from text
 for input_example, target_example in dataset.take(1):
     print("Input :", text_from_ids(input_example).numpy())
     print("Target:", text_from_ids(target_example).numpy())
